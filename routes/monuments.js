@@ -16,17 +16,18 @@ router.post('/upload', uploads.array('image'), async (req, res) => {
       name,
       foreign_tourist_pricing,
       indian_tourinst_pricing,
-      children_below_15_years_pricing,
+      children_below_15_years_pricing
     } = req.body;
     const images = req.files.map(file => file.filename);
     const newMonument = new Monument({
       ...req.body,
+      name: name.toLowerCase(),
       images,
       ticket_pricing: {
         foreign_tourist: `Rs. ${foreign_tourist_pricing}`,
         indian_tourist: `Rs. ${indian_tourinst_pricing}`,
-        children_below_15_years: `Rs. ${children_below_15_years_pricing}`,
-      },
+        children_below_15_years: `Rs. ${children_below_15_years_pricing}`
+      }
     });
 
     await newMonument.save();
