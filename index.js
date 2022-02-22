@@ -8,11 +8,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const monumentsRoutes = require('./routes/monuments');
+const userRoutes = require('./routes/user');
 
 const dbURL = process.env.MONGO_DB_URL;
 mongoose.connect(dbURL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 });
 const db = mongoose.connection;
 db.on('error', () => {
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/api/monuments', monumentsRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('server up and running!!');
