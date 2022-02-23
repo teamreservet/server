@@ -5,14 +5,14 @@ const { storage } = require('../cloudinary/cloudinary');
 const multer = require('multer');
 const uploads = multer({ storage });
 
-const { authMiddleware } = require('../middleware.utils');
+const { adminAuthMiddleware } = require('../middleware.utils');
 
 router.get('/', async (req, res) => {
   const resp = await Monument.find();
   res.status(200).send(resp);
 });
 
-router.get('/:name', authMiddleware, async (req, res) => {
+router.get('/:name', adminAuthMiddleware, async (req, res) => {
   const { name } = req.params;
   const resp = await Monument.findOne({ name });
   res.status(200).send(resp);
@@ -20,7 +20,7 @@ router.get('/:name', authMiddleware, async (req, res) => {
 
 router.post(
   '/upload',
-  authMiddleware,
+  adminAuthMiddleware,
   uploads.array('image'),
   async (req, res) => {
     try {
@@ -30,10 +30,11 @@ router.post(
         indian_tourinst_pricing,
         children_below_15_years_pricing
       } = req.body;
+      console.log(req.body);
       const images = req.files.map(file => file.filename);
       const newMonument = new Monument({
         ...req.body,
-        name: name.toLowerCase(),
+        name: name,
         images,
         ticket_pricing: {
           foreign_tourist: `Rs. ${foreign_tourist_pricing}`,

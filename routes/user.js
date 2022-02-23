@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../model/user');
+const jwt = require('jsonwebtoken');
 
 router.post('/create', async (req, res) => {
   const { uid } = req.body;
@@ -23,13 +24,14 @@ router.post('/get', async (req, res) => {
   const { uid } = req.body;
   try {
     let user = await User.findOne({ uid });
+    const token = jwt.sign({ uid }, process.env.SECRET, { expiresIn: 60 * 60 });
     if (user) {
-      res.status(200).send(user);
+      res.status(200).json({ token, user });
     } else {
       setTimeout(async () => {
         user = await User.findOne({ uid });
         if (user) {
-          res.status(200).send(user);
+          res.status(200).json({ token, user });
         } else {
           res.status(500).send('No user found');
         }
