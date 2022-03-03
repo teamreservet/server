@@ -26,16 +26,17 @@ router.post(
     try {
       const {
         name,
+        tags,
         foreign_tourist_pricing,
         indian_tourinst_pricing,
         children_below_15_years_pricing
       } = req.body;
-      console.log(req.body);
       const images = req.files.map(file => file.filename);
       const newMonument = new Monument({
         ...req.body,
         name: name,
         images,
+        tags: tags.split(','),
         ticket_pricing: {
           foreign_tourist: `Rs. ${foreign_tourist_pricing}`,
           indian_tourist: `Rs. ${indian_tourinst_pricing}`,
