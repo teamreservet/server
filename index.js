@@ -10,6 +10,7 @@ const cors = require('cors');
 const monumentsRoutes = require('./routes/monuments');
 const userRoutes = require('./routes/user');
 const stateRoutes = require('./routes/state');
+const paymentRoutes = require('./routes/payments');
 
 const dbURL = process.env.MONGO_DB_URL;
 mongoose.connect(dbURL, {
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/api/monuments', monumentsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/states', stateRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.get('/', (req, res) => {
   res.send('server up and running!!');
