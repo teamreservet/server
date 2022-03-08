@@ -38,6 +38,7 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
     razorpay_signature,
     amount,
     monumentName,
+    monumentPlace,
     childrenCount,
     indianCount,
     foreignerCount,
@@ -59,7 +60,8 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
     const ticket = new Ticket({
       id: ticket_id,
       totalPrice: amount,
-      place: monumentName,
+      monumentName,
+      monumentPlace,
       childrenCount,
       indianCount,
       foreignerCount,
