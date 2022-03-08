@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const router = Router();
+const Ticket = require('../model/ticket');
 const Razorpay = require('razorpay');
 const shortid = require('shortid');
 const {
@@ -13,7 +14,6 @@ const razorpay = new Razorpay({
 });
 
 router.post('/create-order', isLoggedIn, async (req, res) => {
-  console.log(req.currentUser);
   const { amount, monumentName, indianCount, foreignerCount, childrenCount } =
     req.body;
   const options = {
@@ -32,7 +32,19 @@ router.post('/create-order', isLoggedIn, async (req, res) => {
 });
 
 router.post('/verify-payment', isLoggedIn, async (req, res) => {
-  const { order_id, razorpay_payment_id, razorpay_signature } = req.body;
+  const {
+    order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    amount,
+    monumentName,
+    childrenCount,
+    indianCount,
+    foreignerCount,
+    date,
+    issuer
+  } = req.body;
+  const { currentUser } = req;
   const resp = validatePaymentVerification(
     {
       order_id,
@@ -41,6 +53,21 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
     razorpay_signature,
     process.env.RAZORPAY_API_KEY_SECRET
   );
+
+  if (resp) {
+    const ticket = new Ticket({
+      id: order_id,
+      totalPrice: amount,
+      place: monumentName,
+      childrenCount,
+      indianCount,
+      foreignerCount,
+      date,
+      issuer,
+      issuer_account: currentUser
+    });
+    await ticket.save();
+  }
   res.send(resp);
 });
 
