@@ -7,7 +7,7 @@ module.exports.adminAuthMiddleware = (req, res, next) => {
     if (err) {
       res.status(501).send('You are not authenticated');
     } else {
-      const user = await User.findOne({ uid: decoded.uid });
+      const user = await User.findOne({ email: decoded.email });
       if (user.isAdmin) {
         next();
       } else {
