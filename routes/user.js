@@ -4,9 +4,9 @@ const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 
 router.post('/create', async (req, res) => {
-  const { uid } = req.body;
+  const { email } = req.body;
   try {
-    const user = await User.findOne({ uid });
+    const user = await User.findOne({ email });
     if (user) {
       res.status(200).send(user);
     } else {
@@ -21,16 +21,18 @@ router.post('/create', async (req, res) => {
 });
 
 router.post('/get', async (req, res) => {
-  const { uid } = req.body;
+  const { email } = req.body;
   try {
-    let user = await User.findOne({ uid });
+    let user = await User.findOne({ email });
     user = await user.populate('upcomingTrips');
-    const token = jwt.sign({ uid }, process.env.SECRET, { expiresIn: 60 * 60 });
+    const token = jwt.sign({ email }, process.env.SECRET, {
+      expiresIn: 60 * 60
+    });
     if (user) {
       res.status(200).json({ token, user });
     } else {
       setTimeout(async () => {
-        user = await User.findOne({ uid });
+        user = await User.findOne({ email });
         user = await user.populate('upcomingTrips');
         if (user) {
           res.status(200).json({ token, user });
