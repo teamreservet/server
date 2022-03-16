@@ -65,7 +65,7 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
       childrenCount,
       indianCount,
       foreignerCount,
-      date: date.split('-').reverse().join('-'),
+      date,
       issuer,
       issuer_account: currentUser
     });
