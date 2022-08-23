@@ -8,7 +8,19 @@ const uploads = multer({ storage });
 const { adminAuthMiddleware } = require('../middleware.utils');
 
 router.get('/', async (req, res) => {
-  const resp = await Monument.find();
+  let resp = await Monument.find();
+  // resp = await resp.populate('tickets');
+  // let r = [];
+  // for (let i of resp) {
+  //   r.push(await i.populate('tickets'));
+  // }
+  resp = await Promise.all(
+    resp.map(async r => {
+      r = await r.populate('tickets');
+      return r;
+    })
+  );
+  console.log(resp);
   res.status(200).send(resp);
 });
 
