@@ -5,7 +5,7 @@ const { adminAuthMiddleware } = require('../middleware.utils');
 
 router.post('/verify-ticket', adminAuthMiddleware, async (req, res) => {
   const { ticketId } = req.body;
-  console.log(ticketId);
+  // console.log(ticketId);
   const ticket = await Ticket.findOne({ id: ticketId });
   console.log(ticket);
   if (ticket) {

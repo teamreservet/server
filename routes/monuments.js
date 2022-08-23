@@ -41,7 +41,8 @@ router.post(
           foreign_tourist: `Rs. ${foreign_tourist_pricing}`,
           indian_tourist: `Rs. ${indian_tourinst_pricing}`,
           children_below_15_years: `Rs. ${children_below_15_years_pricing}`
-        }
+        },
+        tickets: []
       });
 
       await newMonument.save();

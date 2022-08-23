@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const Ticket = require('../model/ticket');
+const Monument = require('../model/monument');
 const Razorpay = require('razorpay');
 const shortid = require('shortid');
 const {
@@ -69,9 +70,12 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
       issuer,
       issuer_account: currentUser
     });
-    currentUser.upcomingTrips.push(ticket);
+    currentUser.trips.push(ticket);
+    const monument = await Monument.findOne({ monumentName });
+    monument.tickets.push(ticket);
     await currentUser.save();
     await ticket.save();
+    await monument.save();
   }
   res.send(resp);
 });

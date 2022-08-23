@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     required: true
   },
-  upcomingTrips: [
+  trips: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ticket'

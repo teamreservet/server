@@ -36,6 +36,12 @@ const monumentSchema = mongoose.Schema({
       type: String,
       enum: ['monument', 'heritage', 'museum']
     }
+  ],
+  tickets: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ticket'
+    }
   ]
 });
 

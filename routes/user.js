@@ -12,10 +12,12 @@ router.post('/create', async (req, res) => {
     } else {
       const newUser = new User({ ...req.body });
       newUser.isAdmin = false;
+      // console.log(newUser);
       await newUser.save();
       res.status(200).send(newUser);
     }
   } catch (err) {
+    console.log('error');
     res.status(500).send(err.message);
   }
 });
@@ -24,7 +26,7 @@ router.post('/get', async (req, res) => {
   const { email } = req.body;
   try {
     let user = await User.findOne({ email });
-    user = await user.populate('upcomingTrips');
+    user = await user.populate('trips');
     const token = jwt.sign({ email }, process.env.SECRET, {
       expiresIn: 60 * 60
     });
@@ -33,7 +35,7 @@ router.post('/get', async (req, res) => {
     } else {
       setTimeout(async () => {
         user = await User.findOne({ email });
-        user = await user.populate('upcomingTrips');
+        user = await user.populate('trips');
         if (user) {
           res.status(200).json({ token, user });
         } else {
