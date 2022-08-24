@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
       return r;
     })
   );
-  console.log(resp);
+  // console.log(resp);
   res.status(200).send(resp);
 });
 
