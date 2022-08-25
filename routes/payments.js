@@ -13,6 +13,7 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY_ID,
   key_secret: process.env.RAZORPAY_API_KEY_SECRET
 });
+const Booking_Mail = require('../mailing/main');
 
 router.post('/create-order', isLoggedIn, async (req, res) => {
   const { amount, monumentName, indianCount, foreignerCount, childrenCount } =
@@ -48,6 +49,7 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
     ticket_id
   } = req.body;
   const { currentUser } = req;
+  const email = currentUser.email;
   const resp = validatePaymentVerification(
     {
       order_id,
@@ -56,7 +58,6 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
     razorpay_signature,
     process.env.RAZORPAY_API_KEY_SECRET
   );
-
   if (resp) {
     const ticket = new Ticket({
       id: ticket_id,
@@ -71,8 +72,14 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
       issuer_account: currentUser
     });
     currentUser.trips.push(ticket);
-    const monument = await Monument.findOne({ monumentName });
+    const monument = await Monument.findOne({ name: monumentName });
+
     monument.tickets.push(ticket);
+    try {
+      Booking_Mail(email, monument.about, ticket_id);
+    } catch (err) {
+      console.log(err.message);
+    }
     await currentUser.save();
     await ticket.save();
     await monument.save();

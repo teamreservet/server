@@ -30,12 +30,10 @@ const ticketSchema = mongoose.Schema({
     required: true
   },
   monumentName: {
-    type: String,
-    required: true
+    type: String
   },
   monumentPlace: {
-    type: String,
-    required: true
+    type: String
   },
   issuer_account: {
     type: mongoose.Schema.Types.ObjectId,
