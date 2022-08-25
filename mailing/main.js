@@ -10,13 +10,10 @@ const main = async (mailid, details, ticketId) => {
     auth: {
       type: 'OAuth2',
       user: 'teamreservet@gmail.com',
-      clientId:
-        '514186109093-1r5pebukn3tp0btq7t2lqigrfjookosn.apps.googleusercontent.com',
-      clientSecret: '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',
-      refreshToken:
-        '1//04YtRugAwDeZFCgYIARAAGAQSNwF-L9IriRymX3JFmyzUruVw4jbCWpXfskuazu3Z-ne9FwYdze_oRwmd1q-U8bBk90CEjhpkPGU',
-      accessToken:
-        'ya29.a0AVA9y1v-JeNGYHnTVWVWjwSRGY4HhlDx6Q6AnkPUa-8FuPZgPbbdcx_UdbB7KuUmPL_h0h2fe1CSBzdUSd4tONxxlhfgOBzdGfZ9Z8yxkzvVxDK29C9x3HtDYwkIbZjR0ueFrxawg4V5y-C82yeWW5uqXcJpaCgYKATASATASFQE65dr86DWtLo7rCDKdQTL3Xo5_YA0163',
+      clientId: process.env.NODEMAILER_CLIENT_ID,
+      clientSecret: process.env.NODEMAILER_CLIENT_SECRET,
+      refreshToken: process.env.NODEMAILER_REFRESH_TOKEN,
+      accessToken: process.env.NODEMAILER_ACCESS_TOKEN,
       expires: 1484314697598
     }
   });
