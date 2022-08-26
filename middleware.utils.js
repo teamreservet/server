@@ -8,7 +8,7 @@ module.exports.adminAuthMiddleware = (req, res, next) => {
       res.status(501).send('You are not authenticated');
     } else {
       const user = await User.findOne({ email: decoded.email });
-      if (user.isAdmin) {
+      if (user.isAdmin || user.isGateKeeper) {
         next();
       } else {
         res.status(501).send('You are not authorized to upload monuments');
