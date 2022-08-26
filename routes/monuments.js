@@ -78,9 +78,15 @@ router.post('/upload_many', adminAuthMiddleware, async (req, res) => {
       images: [monument.Image],
       tags: ['monument'],
       ticket_pricing: {
-        foreign_tourist: 'Rs. 550',
-        indian_tourist: 'Rs. 100',
-        children_below_15_years: 'Rs. 0'
+        foreign_tourist: monument.foreign_tourist
+          ? monument.foreign_tourist
+          : 'Rs. 550',
+        indian_tourist: monument.indian_tourist
+          ? monument.indian_tourist
+          : 'Rs. 100',
+        indian_tourist: monument.indian_tourist
+          ? monument.foreign_touriindian_touristst
+          : 'Rs. 0'
       }
     });
     await newMonument.save();
