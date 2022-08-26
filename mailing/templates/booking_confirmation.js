@@ -312,7 +312,7 @@ const html = (
                                                   class="caption-top"
                                                   ><strong
                                                     ><span
-                                                      style="color: #ff0000"
+                                                      style="color: #ff0000; position: relative; bottom: 15px"
                                                       >Thank You For Booking
                                                       With Us</span
                                                     ></strong

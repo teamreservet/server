@@ -66,4 +66,27 @@ router.post(
   }
 );
 
+router.post('/upload_many', adminAuthMiddleware, async (req, res) => {
+  // console.log(req.body);
+  for (let monument of req.body) {
+    const newMonument = new Monument({
+      name: monument.Name,
+      about: monument.Discription,
+      opening_time: '06:00 A.M.',
+      closing_time: '06:00 P.M.',
+      location: monument.Location,
+      images: [monument.Image],
+      tags: ['monument'],
+      ticket_pricing: {
+        foreign_tourist: 'Rs. 550',
+        indian_tourist: 'Rs. 100',
+        children_below_15_years: 'Rs. 0'
+      }
+    });
+    await newMonument.save();
+    console.log(newMonument);
+  }
+  res.status(200).send('Uploaded!!');
+});
+
 module.exports = router;

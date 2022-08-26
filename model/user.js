@@ -13,6 +13,10 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     required: true
   },
+  isGateKeeper: {
+    type: Boolean,
+    required: true
+  },
   trips: [
     {
       type: mongoose.Schema.Types.ObjectId,
