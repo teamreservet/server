@@ -11,9 +11,6 @@ router.post('/create', async (req, res) => {
       res.status(200).send(user);
     } else {
       const newUser = new User({ ...req.body });
-      newUser.isAdmin = false;
-      newUser.isGateKeeper = false;
-      // console.log(newUser);
       await newUser.save();
       res.status(200).send(newUser);
     }

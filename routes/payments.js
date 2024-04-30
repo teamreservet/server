@@ -34,34 +34,12 @@ router.post('/create-order', isLoggedIn, async (req, res) => {
 });
 
 router.post('/verify-payment', isLoggedIn, async (req, res) => {
-  const {
-    order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-    amount,
-    monumentName,
-    monumentPlace,
-    childrenCount,
-    indianCount,
-    foreignerCount,
-    date,
-    issuer,
-    ticket_id
-  } = req.body;
-  const { currentUser } = req;
-  const email = currentUser.email;
-  const resp = validatePaymentVerification(
-    {
+  try {
+    const {
       order_id,
-      payment_id: razorpay_payment_id
-    },
-    razorpay_signature,
-    process.env.RAZORPAY_API_KEY_SECRET
-  );
-  if (resp) {
-    const ticket = new Ticket({
-      id: ticket_id,
-      totalPrice: amount,
+      razorpay_payment_id,
+      razorpay_signature,
+      amount,
       monumentName,
       monumentPlace,
       childrenCount,
@@ -69,22 +47,52 @@ router.post('/verify-payment', isLoggedIn, async (req, res) => {
       foreignerCount,
       date,
       issuer,
-      issuer_account: currentUser
-    });
-    currentUser.trips.push(ticket);
-    const monument = await Monument.findOne({ name: monumentName });
+      ticket_id
+    } = req.body;
+    const { currentUser } = req;
+    const email = currentUser.email;
+    const resp = validatePaymentVerification(
+      {
+        order_id,
+        payment_id: razorpay_payment_id
+      },
+      razorpay_signature,
+      process.env.RAZORPAY_API_KEY_SECRET
+    );
+    console.log(resp);
+    if (resp) {
+      const ticket = new Ticket({
+        id: ticket_id,
+        totalPrice: amount,
+        monumentName,
+        monumentPlace,
+        childrenCount,
+        indianCount,
+        foreignerCount,
+        date,
+        issuer,
+        issuer_account: currentUser
+      });
+      currentUser.trips.push(ticket);
+      const monument = await Monument.findOne({ name: monumentName });
 
-    monument.tickets.push(ticket);
-    try {
-      Booking_Mail(email, monument.about, ticket_id);
-    } catch (err) {
-      console.log(err.message);
+      monument.tickets.push(ticket);
+      // try {
+      //   Booking_Mail(email, monument.about, ticket_id);
+      // } catch (err) {
+      //   console.log(err.message);
+      // }
+      await currentUser.save();
+      await ticket.save();
+      await monument.save();
     }
-    await currentUser.save();
-    await ticket.save();
-    await monument.save();
+    res.send(resp);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      error: err.message
+    });
   }
-  res.send(resp);
 });
 
 module.exports = router;
